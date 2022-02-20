@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option csharp_namespace = "Lykke.HftApi.ApiContract";
+
+package common;
+
+option go_package = "./;service";
+
+service Monitoring {
+	rpc IsAlive (IsAliveRequest) returns (IsAliveResponce);
+}
+
+message IsAliveRequest {
+}
+
+message IsAliveResponce {
+	string name = 1;
+	string version = 2;
+	string startedAt = 3;
+	string env = 4;
+	string hostname = 5;
+}
