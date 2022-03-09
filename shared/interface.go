@@ -1,14 +1,12 @@
 package shared
 
-import "time"
-
 type Analyser interface {
 	Analyse(AnalyserParams) ([]Trend, error)
 }
 
 type AnalyserParams struct {
-	Start time.Time
-	End   time.Time
+	Frame int // number of days to analyse and get trends of it
 	TrendSize
-	Symbol string
+	Symbol    string
+	Collector Collector
 }
