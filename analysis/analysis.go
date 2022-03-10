@@ -2,6 +2,8 @@ package analysis
 
 import (
 	"fmt"
+	"strconv"
+	"time"
 
 	"github.com/MauricioAntonioMartinez/mcbot/shared"
 )
@@ -28,6 +30,20 @@ func (a *Analyzer) Analyse() ([]shared.Trend, error) {
 		return nil, err
 	}
 
+	//	for _, v := range data {
+
+	//fmt.Printf("%s v: %v h:%v l:%v time: %v \n", a.symbol, v.Close, v.High, v.Low, a.getDate(v.Time))
+	//}
+
 	fmt.Println(len(data))
 	return nil, nil
+}
+
+func (a *Analyzer) getDate(ux string) time.Time {
+	i, err := strconv.ParseInt(ux, 10, 64)
+	if err != nil {
+		panic(err)
+	}
+	tm := time.Unix(i, 0)
+	return tm
 }

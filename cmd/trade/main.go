@@ -13,8 +13,14 @@ func main() {
 	cryptoCollector := collectors.NewCryptoStore()
 
 	an := analysis.NewAnalyser(shared.AnalyserParams{
-		Frame:     365 * 4, // four years
+		Frame:     365 * 2, // four years
 		Collector: cryptoCollector,
+		Symbol:    "BTC",
 	})
-	fmt.Println(an.Analyse())
+	_, err := an.Analyse()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
 }

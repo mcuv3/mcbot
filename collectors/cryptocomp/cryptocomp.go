@@ -2,7 +2,9 @@ package cryptocomp
 
 import (
 	"encoding/json"
-	"errors"
+	"fmt"
+	"math"
+	"strconv"
 
 	"github.com/MauricioAntonioMartinez/mcbot/shared"
 	"gopkg.in/resty.v0"
@@ -48,7 +50,7 @@ type record struct {
 
 func (c CryptoComp) getData(symbol string, ts string, limit int) (response, error) {
 	uri := newUri()
-	if ts == "" {
+	if ts != "" {
 		uri.ts(ts)
 	}
 	url := uri.apikey(c.apikey).
@@ -69,31 +71,30 @@ func (c CryptoComp) getData(symbol string, ts string, limit int) (response, erro
 }
 
 func (c CryptoComp) Collect(symbol string, frame int) ([]shared.Candle, error) {
-	hours := frame * 24
-	if hours < c.recordLimit() {
-		return nil, errors.New("CryptoComp: frame must be at least 84 days for analysis")
-	}
-
+	hours := float64(frame * 24)
 	candles := []shared.Candle{}
+	calls := int(math.Ceil(hours / c.recordLimit()))
+	ts := ""
 
-	for {
-		r, err := c.getData("BTC", "", hours)
+	for i := 0; i < calls; i++ {
+		r, err := c.getData(symbol, ts, 2000)
 		if err != nil {
 			return nil, err
+		}
+
+		records := r.Data.Data
+
+		if len(records) > 0 {
+			fmt.Println(records[0].Time)
+			ts = fmt.Sprintf("%d", records[0].Time)
 		}
 
 		for _, r := range r.Data.Data {
 			candles = append(candles, c.toCandle(r))
 		}
-
-		hours := hours - 2000
-
-		if hours <= 0 {
-			break
-		}
 	}
 
-	return nil, nil
+	return candles, nil
 }
 
 func (c CryptoComp) toCandle(r record) shared.Candle {
@@ -103,11 +104,12 @@ func (c CryptoComp) toCandle(r record) shared.Candle {
 		Low:    r.Low,
 		Close:  r.Close,
 		Volume: r.Volumeto,
+		Time:   strconv.Itoa(r.Time),
 	}
 }
 
 // recordLimit represents the maximum number of records that can be returned, this
 // could change with the time placed on a function for readability
-func (c CryptoComp) recordLimit() int {
+func (c CryptoComp) recordLimit() float64 {
 	return 2000
 }

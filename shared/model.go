@@ -41,6 +41,7 @@ type Candle struct {
 	Low    float64
 	Close  float64
 	Volume float64
+	Time   string
 }
 
 type Trend struct {
