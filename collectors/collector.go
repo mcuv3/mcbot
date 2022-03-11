@@ -1,8 +1,6 @@
 package collectors
 
 import (
-	"fmt"
-
 	"github.com/MauricioAntonioMartinez/mcbot/collectors/coinapi"
 	"github.com/MauricioAntonioMartinez/mcbot/collectors/cryptocomp"
 	"github.com/MauricioAntonioMartinez/mcbot/shared"
@@ -25,7 +23,6 @@ func (c CryptoStore) Collect(symbol string, frame int) ([]shared.Candle, error) 
 	for _, v := range c.collectors {
 		candles, err := v.Collect(symbol, frame)
 		if err != nil {
-			fmt.Println(err)
 			continue
 		}
 		return candles, nil

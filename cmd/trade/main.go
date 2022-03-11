@@ -16,6 +16,7 @@ func main() {
 		Frame:     365 * 2, // four years
 		Collector: cryptoCollector,
 		Symbol:    "BTC",
+		TrendSize: 2,
 	})
 	_, err := an.Analyse()
 	if err != nil {

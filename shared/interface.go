@@ -5,8 +5,8 @@ type Analyser interface {
 }
 
 type AnalyserParams struct {
-	Frame int // number of days to analyse and get trends of it
-	TrendSize
+	Frame     int // number of days to analyse and get trends of it
+	TrendSize     // Amount of hours to look for a trend
 	Symbol    string
 	Collector Collector
 }

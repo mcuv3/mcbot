@@ -1,5 +1,11 @@
 package shared
 
+import (
+	"time"
+
+	"github.com/google/uuid"
+)
+
 type Exchange = string
 
 const (
@@ -14,14 +20,8 @@ const (
 	DOWN
 )
 
-type TrendSize int
-
-const (
-	Hour TrendSize = iota
-	Day
-	Week
-	Month
-)
+// Amount of horus of a given trend
+type TrendSize = int
 
 type Stock struct {
 	Symbol string
@@ -45,9 +45,12 @@ type Candle struct {
 }
 
 type Trend struct {
-	Avg        float64    // represents the average of the last n prices of the trend size
-	State      TrendState // compared to the previous trend.
-	Volatility float64    // factor of change
-	Size       TrendSize
-	Volume     float64 // not available at hourly trend.
+	ID           uuid.UUID // trendID
+	Avg          float64   // represents the average of the last n prices of the trend size
+	Volatility   float64   // highest - lowest based on the last n candles
+	Size         TrendSize
+	AvgVolume    float64
+	StdDeviation float64 // standard deviation of the last n prices of the trend size
+	Start        time.Time
+	End          time.Time
 }
