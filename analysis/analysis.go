@@ -2,7 +2,6 @@ package analysis
 
 import (
 	"errors"
-	"fmt"
 	"math"
 
 	"github.com/MauricioAntonioMartinez/mcbot/shared"
@@ -25,21 +24,29 @@ func NewAnalyser(params shared.AnalyserParams) *Analyzer {
 	}
 }
 
-func (a *Analyzer) Analyse() ([]shared.Trend, error) {
+func (a *Analyzer) Analyse() (trends []shared.Trend, err error) {
 	data, err := a.cryptostore.Collect(a.symbol, a.frame)
 	if err != nil {
 		return nil, err
 	}
 
 	//numTrends := shared.DivUp(len(data), a.trendSize)
+	currentCandle := make([]shared.Candle, 0)
+	var count int
+	for _, c := range data {
+		currentCandle = append(currentCandle, c)
+		count++
+		if count == a.trendSize {
+			t, err := a.getTrend(currentCandle)
+			if err != nil {
+				return nil, err
+			}
+			trends = append(trends, *t)
+			currentCandle, count = nil, 0
+		}
+	}
 
-	//	for _, v := range data {
-
-	//fmt.Printf("%s v: %v h:%v l:%v time: %v \n", a.symbol, v.Close, v.High, v.Low, a.getDate(v.Time))
-	//}
-
-	fmt.Println(len(data))
-	return nil, nil
+	return trends, err
 }
 
 func (a *Analyzer) getTrend(data []shared.Candle) (*shared.Trend, error) {

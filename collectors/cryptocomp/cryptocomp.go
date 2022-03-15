@@ -85,7 +85,6 @@ func (c CryptoComp) Collect(symbol string, frame int) ([]shared.Candle, error) {
 		records := r.Data.Data
 
 		if len(records) > 0 {
-			fmt.Println(records[0].Time)
 			ts = fmt.Sprintf("%d", records[0].Time)
 		}
 

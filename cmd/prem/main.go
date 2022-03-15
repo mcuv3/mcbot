@@ -1,3 +1,4 @@
+// run it on your machine as a web server instead of lambdas, create orders,feed data with grpc calls
 package main
 
 import (
@@ -16,12 +17,17 @@ func main() {
 		Frame:     365 * 2, // four years
 		Collector: cryptoCollector,
 		Symbol:    "BTC",
-		TrendSize: 2,
+		TrendSize: 24,
 	})
-	_, err := an.Analyse()
+	trends, err := an.Analyse()
 	if err != nil {
 		fmt.Println(err)
 		return
+	}
+	fmt.Println(len(trends))
+
+	for _, v := range trends {
+		fmt.Printf("%+v\n", v)
 	}
 
 }
