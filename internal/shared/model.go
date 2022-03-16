@@ -46,8 +46,10 @@ type Candle struct {
 
 type Trend struct {
 	ID           uuid.UUID // trendID
-	Avg          float64   // represents the average of the last n prices of the trend size
-	Volatility   float64   // highest - lowest based on the last n candles
+	PrevTrendID  uuid.UUID
+	NextTrendID  uuid.UUID
+	Avg          float64 // represents the average of the last n prices of the trend size
+	Volatility   float64 // highest - lowest based on the last n candles
 	Size         TrendSize
 	AvgVolume    float64
 	StdDeviation float64 // standard deviation of the last n prices of the trend size

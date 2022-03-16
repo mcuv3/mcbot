@@ -1,0 +1,6 @@
+
+exchanges: 
+  -  name: binance 
+     api: https://api.binance.com
+     credentials:  # depending on the exchange this could potentially change depending 
+        apikey: xxxx 

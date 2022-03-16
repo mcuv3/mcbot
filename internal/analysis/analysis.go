@@ -30,16 +30,21 @@ func (a *Analyzer) Analyse() (trends []shared.Trend, err error) {
 		return nil, err
 	}
 
-	//numTrends := shared.DivUp(len(data), a.trendSize)
 	currentCandle := make([]shared.Candle, 0)
 	var count int
+	var t *shared.Trend
+	var trendID uuid.UUID
+
 	for _, c := range data {
 		currentCandle = append(currentCandle, c)
 		count++
 		if count == a.trendSize {
-			t, err := a.getTrend(currentCandle)
+			t, err = a.getTrend(currentCandle, trendID)
 			if err != nil {
 				return nil, err
+			}
+			if len(trends) > 0 {
+				trends[len(trends)-1].NextTrendID = t.ID
 			}
 			trends = append(trends, *t)
 			currentCandle, count = nil, 0
@@ -49,7 +54,7 @@ func (a *Analyzer) Analyse() (trends []shared.Trend, err error) {
 	return trends, err
 }
 
-func (a *Analyzer) getTrend(data []shared.Candle) (*shared.Trend, error) {
+func (a *Analyzer) getTrend(data []shared.Candle, prevTrendId uuid.UUID) (*shared.Trend, error) {
 	if len(data) == 0 {
 		return nil, errors.New("Not enough candles")
 	}

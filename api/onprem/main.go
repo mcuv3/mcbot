@@ -4,9 +4,9 @@ package main
 import (
 	"fmt"
 
-	"github.com/MauricioAntonioMartinez/mcbot/analysis"
-	"github.com/MauricioAntonioMartinez/mcbot/collectors"
-	"github.com/MauricioAntonioMartinez/mcbot/shared"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/analysis"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/collectors"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/shared"
 )
 
 func main() {

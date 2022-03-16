@@ -8,6 +8,7 @@ require (
 	github.com/markcheno/go-quote v0.0.0-20211116021555-bb34b59a97eb // indirect
 	github.com/markcheno/go-talib v0.0.0-20190307022042-cd53a9264d70 // indirect
 	github.com/piquette/qtrn v0.0.9 // indirect
+	go.mongodb.org/mongo-driver v1.8.4 // indirect
 	golang.org/x/net v0.0.0-20220127200216-cd36cc0744dd // indirect
 	golang.org/x/sys v0.0.0-20220209214540-3681064d5158 // indirect
 	google.golang.org/genproto v0.0.0-20220218161850-94dd64e39d7c // indirect
