@@ -4,7 +4,7 @@ import (
 	"errors"
 	"math"
 
-	"github.com/MauricioAntonioMartinez/mcbot/shared"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/shared"
 	"github.com/google/uuid"
 )
 

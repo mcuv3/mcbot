@@ -1,9 +1,9 @@
 package collectors
 
 import (
-	"github.com/MauricioAntonioMartinez/mcbot/collectors/coinapi"
-	"github.com/MauricioAntonioMartinez/mcbot/collectors/cryptocomp"
-	"github.com/MauricioAntonioMartinez/mcbot/shared"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/collectors/coinapi"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/collectors/cryptocomp"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/shared"
 )
 
 type CryptoStore struct {

@@ -5,6 +5,7 @@ go 1.16
 require (
 	github.com/clebi/yfinance v0.0.0-20170430144211-140800e59f10 // indirect
 	github.com/google/uuid v1.3.0 // indirect
+	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/markcheno/go-quote v0.0.0-20211116021555-bb34b59a97eb // indirect
 	github.com/markcheno/go-talib v0.0.0-20190307022042-cd53a9264d70 // indirect
 	github.com/piquette/qtrn v0.0.9 // indirect

@@ -6,7 +6,7 @@ import (
 	"math"
 	"strconv"
 
-	"github.com/MauricioAntonioMartinez/mcbot/shared"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/shared"
 	"gopkg.in/resty.v0"
 )
 

@@ -1,7 +1,5 @@
 package stock
 
-import "github.com/google/uuid"
-
 type Exchange = string
 
 const (
@@ -9,10 +7,10 @@ const (
 )
 
 type Stock struct {
-	ID       uuid.UUID `bson:"id"`
-	Symbol   string    `bson:"symbol"`
-	Name     string    `bson:"name"`
-	Exchange Exchange  `bson:"exchange"`
+	ID       string   `bson:"_id"`
+	Symbol   string   `bson:"symbol"`
+	Name     string   `bson:"name"`
+	Exchange Exchange `bson:"exchange"`
 }
 
 var emptyStock = Stock{}

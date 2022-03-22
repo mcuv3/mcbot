@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/MauricioAntonioMartinez/mcbot/collectors/lykke/service"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/collectors/lykke/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 )

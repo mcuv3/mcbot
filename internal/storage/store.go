@@ -2,13 +2,10 @@ package storage
 
 import (
 	"context"
-	"fmt"
-	"log"
 	"time"
 
-	"github.com/MauricioAntonioMartinez/mcbot/storage/stock"
-	"github.com/MauricioAntonioMartinez/mcbot/storage/trend"
-	"go.mongodb.org/mongo-driver/bson"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/storage/stock"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/storage/trend"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -31,22 +28,17 @@ func NewStore(params Params) Store {
 	}
 }
 
-func ConnectDB(str string) {
+func ConnectDB(str string) (*mongo.Client, error) {
 	client, err := mongo.NewClient(options.Client().ApplyURI(str))
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
 	err = client.Connect(ctx)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	defer client.Disconnect(ctx)
 
-	databases, err := client.ListDatabaseNames(ctx, bson.M{})
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(databases)
-
+	return client, nil
 }

@@ -2,32 +2,48 @@
 package main
 
 import (
+	"context"
 	"fmt"
+	"log"
+	"net/http"
 
-	"github.com/MauricioAntonioMartinez/mcbot/internal/analysis"
-	"github.com/MauricioAntonioMartinez/mcbot/internal/collectors"
-	"github.com/MauricioAntonioMartinez/mcbot/internal/shared"
+	"github.com/MauricioAntonioMartinez/mcbot/api/onprem/handlers"
+	"github.com/MauricioAntonioMartinez/mcbot/internal/storage"
 )
+
+type config struct {
+	port string
+}
 
 func main() {
 
-	cryptoCollector := collectors.NewCryptoStore()
+	ctx := context.Background()
 
-	an := analysis.NewAnalyser(shared.AnalyserParams{
-		Frame:     365 * 2, // four years
-		Collector: cryptoCollector,
-		Symbol:    "BTC",
-		TrendSize: 24,
-	})
-	trends, err := an.Analyse()
+	client, err := storage.ConnectDB("")
 	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	fmt.Println(len(trends))
-
-	for _, v := range trends {
-		fmt.Printf("%+v\n", v)
+		log.Fatal("Error connecting with the database read the error: ", err)
 	}
 
+	defer client.Disconnect(ctx)
+
+	stores := storage.NewStore(storage.Params{
+		Connection: client,
+		Database:   "mcbot",
+	})
+
+	s := newSever(handlers.NewLogic(handlers.Params{
+		Stores: stores,
+	}))
+
+	fmt.Println("Listenning server on port 8080")
+	if err := s.ListenAndServe(); err != nil {
+		panic(err)
+	}
+}
+
+func newSever(handlers handlers.Handler) http.Server {
+	return http.Server{
+		Addr:    ":8080",
+		Handler: routes(handlers),
+	}
 }

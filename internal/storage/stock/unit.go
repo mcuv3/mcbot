@@ -10,6 +10,6 @@ type Unit struct {
 func NewUnit(client *mongo.Database) Unit {
 	return Unit{
 		Reader: NewReader(client),
-		Writer: NewWrite(client),
+		Writer: NewWriter(client),
 	}
 }
