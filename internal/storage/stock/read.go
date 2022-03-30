@@ -16,10 +16,12 @@ func NewReader(client *mongo.Database) Reader {
 	}
 }
 
-func (r Reader) Find(ctx context.Context, filters map[string]interface{}) ([]Stock, error) {
-	collection := r.client.Collection(emptyStock.Table())
+type ListParams struct{}
+
+func (r Reader) Find(ctx context.Context, params ListParams) ([]Stock, error) {
+	collection := r.client.Collection(emptyStock.CollectionName())
 	var trends []Stock
-	cur, err := collection.Find(ctx, filters)
+	cur, err := collection.Find(ctx, params)
 	if err != nil {
 		return trends, err
 	}

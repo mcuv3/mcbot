@@ -8,6 +8,9 @@ import (
 
 type Handler interface {
 	AnalyseStockHandler(w http.ResponseWriter, r *http.Request)
+	AddStockHandler(w http.ResponseWriter, r *http.Request)
+	ListStockHandler(w http.ResponseWriter, r *http.Request)
+	DeleteStockHandler(w http.ResponseWriter, r *http.Request)
 }
 
 type Params struct {

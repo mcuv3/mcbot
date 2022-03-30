@@ -15,6 +15,6 @@ type Stock struct {
 
 var emptyStock = Stock{}
 
-func (s Stock) Table() string {
-	return "stocks"
+func (s Stock) CollectionName() string {
+	return "stock"
 }

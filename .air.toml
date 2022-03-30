@@ -3,7 +3,7 @@ testdata_dir = "testdata"
 tmp_dir = "tmp"
 
 [build]
-  bin = "./dist/onprem"
+  bin = ";export $(grep -v '^#' .env | xargs); ./dist/onprem -dbURL=$MONGO_URI -coinAPI=$COIN_API -cryptoCompAPI=$CRYPTO_COMPATE_KEY"
   cmd = "go build -o ./dist/onprem ./api/onprem"
   delay = 1000
   exclude_dir = ["assets", "tmp", "vendor", "testdata"]

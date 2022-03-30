@@ -22,6 +22,7 @@ type Store struct {
 
 func NewStore(params Params) Store {
 	db := params.Connection.Database(params.Database)
+
 	return Store{
 		Trend: trend.NewUnit(db),
 		Stock: stock.NewUnit(db),

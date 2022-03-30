@@ -1,0 +1,16 @@
+
+- CRUD stocks
+    // attach analysis metadata analyzed_start analyzed_end 
+    // for reanalyze deletes current trends and make the api calls again.
+
+Workflow analyse 
+- create stocks
+* start analysis 2+ years = Trends 1hour + link trends each other uuids
+- Keep track of that stock through websocket/jobs etc. store trends in db 
+     * background job (define the optimal trend size)
+     a) define a point recovery of trends if something happened find a way to get the trends 
+        from the point of the last trend to the current date.
+
+- Track stock changes compare current trends with previous then calculate the diff and finish 
+
+-- JOBS entity to keep track and reset or resume the analysis for the above use case.
