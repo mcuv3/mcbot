@@ -8,8 +8,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/MauricioAntonioMartinez/mcbot/api/onprem/handlers"
-	"github.com/MauricioAntonioMartinez/mcbot/internal/storage"
+	"github.com/mcuv3/mcbot/api/onprem/handlers"
+	"github.com/mcuv3/mcbot/internal/storage"
 )
 
 type config struct {

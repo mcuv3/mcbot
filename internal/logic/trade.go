@@ -3,7 +3,7 @@ package logic
 import (
 	"context"
 
-	"github.com/MauricioAntonioMartinez/mcbot/internal/shared"
+	"github.com/mcuv3/mcbot/internal/shared"
 )
 
 func (l Logic) Buy(ctx context.Context, params shared.BuyParams) error {

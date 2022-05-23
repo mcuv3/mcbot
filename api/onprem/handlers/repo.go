@@ -3,7 +3,7 @@ package handlers
 import (
 	"context"
 
-	"github.com/MauricioAntonioMartinez/mcbot/internal/storage/stock"
+	"github.com/mcuv3/mcbot/internal/storage/stock"
 )
 
 // SaveStockHandler is a function that saves a stock

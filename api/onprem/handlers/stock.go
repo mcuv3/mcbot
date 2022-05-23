@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/MauricioAntonioMartinez/mcbot/internal/storage/stock"
 	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"github.com/mcuv3/mcbot/internal/storage/stock"
 )
 
 func (l Logic) AddStockHandler(w http.ResponseWriter, r *http.Request) {

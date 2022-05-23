@@ -3,7 +3,7 @@ package coinapi
 import (
 	"fmt"
 
-	"github.com/MauricioAntonioMartinez/mcbot/internal/shared"
+	"github.com/mcuv3/mcbot/internal/shared"
 	"gopkg.in/resty.v0"
 )
 

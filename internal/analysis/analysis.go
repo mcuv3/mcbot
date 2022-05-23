@@ -4,8 +4,8 @@ import (
 	"errors"
 	"math"
 
-	"github.com/MauricioAntonioMartinez/mcbot/internal/shared"
 	"github.com/google/uuid"
+	"github.com/mcuv3/mcbot/internal/shared"
 )
 
 type Analyzer struct {

@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/MauricioAntonioMartinez/mcbot/internal/storage"
+	"github.com/mcuv3/mcbot/internal/storage"
 )
 
 type Handler interface {
@@ -11,6 +11,8 @@ type Handler interface {
 	AddStockHandler(w http.ResponseWriter, r *http.Request)
 	ListStockHandler(w http.ResponseWriter, r *http.Request)
 	DeleteStockHandler(w http.ResponseWriter, r *http.Request)
+	CurrentStatusHandler(w http.ResponseWriter, r *http.Request)
+	AddStatusHandler(w http.ResponseWriter, r *http.Request)
 }
 
 type Params struct {

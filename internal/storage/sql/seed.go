@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/MauricioAntonioMartinez/mcbot/internal/storage"
+	"github.com/mcuv3/mcbot/internal/storage"
 	"go.mongodb.org/mongo-driver/mongo"
 )
 

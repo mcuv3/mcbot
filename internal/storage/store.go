@@ -4,8 +4,8 @@ import (
 	"context"
 	"time"
 
-	"github.com/MauricioAntonioMartinez/mcbot/internal/storage/stock"
-	"github.com/MauricioAntonioMartinez/mcbot/internal/storage/trend"
+	"github.com/mcuv3/mcbot/internal/storage/stock"
+	"github.com/mcuv3/mcbot/internal/storage/trend"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
