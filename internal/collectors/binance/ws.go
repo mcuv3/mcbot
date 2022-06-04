@@ -1,4 +1,4 @@
-package feed
+package binance
 
 import (
 	"context"
@@ -16,6 +16,7 @@ import (
 type WsHandler[T Payloads] interface {
 	OnMessage(ctx context.Context, msg T) error
 	OnError(ctx context.Context, err error)
+	OnStart(msg []byte)
 }
 
 const DEFAULT_ADDR = "stream.binance.com:9443"
@@ -27,7 +28,7 @@ type SymbolSubscriber[T Payloads] struct {
 
 type Params struct {
 	ID     int      `json:"id"`
-	Method string   `json:"method"`
+	Method Methods  `json:"method"`
 	Params []string `json:"params"`
 }
 
@@ -45,13 +46,14 @@ func NewSymbolSubscriber[T Payloads](addr string, handler WsHandler[T]) SymbolSu
 func (w SymbolSubscriber[T]) Dial(ctx context.Context, params Params) error {
 	interrupt := make(chan os.Signal, 1)
 	signal.Notify(interrupt, os.Interrupt)
-	u := url.URL{Scheme: "ws", Host: w.addr, Path: "/ws"}
+	u := url.URL{Scheme: "wss", Host: w.addr, Path: "/ws"}
 
 	payload, err := json.Marshal(params)
 	if err != nil {
 		return err
 	}
 
+	fmt.Printf("Subscribing to : %s  payload: %s ", u.String(), string(payload))
 	c, _, err := websocket.DefaultDialer.Dial(u.String(), nil)
 	if err != nil {
 		return err
@@ -60,8 +62,12 @@ func (w SymbolSubscriber[T]) Dial(ctx context.Context, params Params) error {
 	done := make(chan struct{})
 
 	go func() {
+		var isFirstMessage = true
 		err := c.WriteMessage(websocket.TextMessage, payload)
-		fmt.Println(err)
+		if err != nil {
+			log.Println(err)
+		}
+
 		defer close(done)
 		for {
 			_, message, err := c.ReadMessage()
@@ -69,6 +75,12 @@ func (w SymbolSubscriber[T]) Dial(ctx context.Context, params Params) error {
 				w.handler.OnError(ctx, err)
 				return
 			}
+			if isFirstMessage {
+				w.handler.OnStart(message)
+				isFirstMessage = false
+				continue
+			}
+
 			hold := new(T)
 			if err := json.Unmarshal(message, hold); err != nil {
 				w.handler.OnError(ctx, err)

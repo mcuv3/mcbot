@@ -1,4 +1,11 @@
-package feed
+package binance
+
+type Methods string
+
+const (
+	SUBSCRIBE   Methods = "SUBSCRIBE"
+	UNSUBSCRIBE Methods = "UNSUBSCRIBE"
+)
 
 type Payloads interface {
 	AggregateTradePayload | KlinePayload
