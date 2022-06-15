@@ -1,13 +1,15 @@
-package binance
+package handlers
 
 import (
 	"context"
 	"fmt"
+
+	"github.com/mcuv3/mcbot/internal/collectors/binance"
 )
 
 type KLineHandler struct{}
 
-func (k KLineHandler) OnMessage(ctx context.Context, msg KlinePayload) error {
+func (k KLineHandler) OnMessage(ctx context.Context, msg binance.KlinePayload) error {
 	fmt.Println("Message : ", msg)
 	return nil
 }

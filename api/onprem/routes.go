@@ -15,6 +15,7 @@ func routes(handlers handlers.Handler) http.Handler {
 	root.HandleFunc("/stock/{stockId}", handlers.DeleteStockHandler).Methods("DELETE")
 	root.HandleFunc("/trades", handlers.AddStatusHandler).Methods("GET")
 	root.HandleFunc("/trades/current", handlers.CurrentStatusHandler).Methods("GET")
+	root.HandleFunc("/seed", handlers.SeedHandler).Methods("GET")
 
 	return root
 }

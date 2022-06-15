@@ -44,9 +44,9 @@ func (b API) URL(path string) string {
 }
 
 type GetKlineParams struct {
-	Symbol   string
-	Interval string
-	Limit    int
+	Symbol    string
+	Interval  string
+	startTime int64
 }
 
 type Kline struct {
@@ -62,16 +62,33 @@ type Kline struct {
 	NumberOfTrades   int
 }
 
-func (b API) GetKline(ctx context.Context, params GetKlineParams) ([]Kline, error) {
+func (b API) GetKlines(ctx context.Context, params GetKlineParams) ([]Kline, error) {
 	var klines []Kline
 	var results [][]interface{}
-	if err := b.Fetch(ctx, FetchParams{}, &results); err != nil {
+	if err := b.Fetch(ctx, FetchParams{
+		Method: http.MethodGet,
+		URL:    b.URL("klines"),
+		Query: map[string]string{
+			"symbol":    params.Symbol,
+			"interval":  params.Interval,
+			"startTime": fmt.Sprintf("%d", params.startTime),
+		},
+	}, &results); err != nil {
 		return nil, err
 	}
 
 	for _, r := range results {
 		k := Kline{
-			Symbol: r[0].(string),
+			Symbol:           params.Symbol,
+			OpenTime:         r[0].(int),
+			Open:             r[1].(string),
+			High:             r[2].(string),
+			Low:              r[3].(string),
+			Close:            r[4].(string),
+			Volume:           r[5].(string),
+			CloseTime:        r[6].(int),
+			QuoteAssetVolume: r[7].(string),
+			NumberOfTrades:   r[8].(int),
 		}
 		klines = append(klines, k)
 	}
@@ -79,10 +96,18 @@ func (b API) GetKline(ctx context.Context, params GetKlineParams) ([]Kline, erro
 	return klines, nil
 }
 
-func (b API) ListSymbols(ctx context.Context) ([]string, error) {
+type Symbol struct {
+	Symbol     string `json:"symbol"`
+	BaseAsset  string `json:"baseAsset"`
+	QuoteAsset string `json:"quoteAsset"`
+}
+
+func (b API) ListSymbols(ctx context.Context) ([]Symbol, error) {
 	type response struct {
 		Symbols []struct {
-			Symbol string `json:"symbol"`
+			Symbol     string `json:"symbol"`
+			BaseAsset  string `json:"baseAsset"`
+			QuoteAsset string `json:"quoteAsset"`
 		} `json:"symbols"`
 	}
 	var resp response
@@ -92,9 +117,9 @@ func (b API) ListSymbols(ctx context.Context) ([]string, error) {
 	}, &resp); err != nil {
 		return nil, err
 	}
-	symbols := []string{}
+	symbols := []Symbol{}
 	for _, s := range resp.Symbols {
-		symbols = append(symbols, s.Symbol)
+		symbols = append(symbols, s)
 	}
 	return symbols, nil
 }

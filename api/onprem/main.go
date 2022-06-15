@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/mcuv3/mcbot/api/onprem/handlers"
+	"github.com/mcuv3/mcbot/internal/logic"
 	"github.com/mcuv3/mcbot/internal/storage"
 )
 
@@ -48,11 +49,15 @@ func main() {
 		Database:   cfg.dbName,
 	})
 
-	s := newSever(handlers.NewLogic(handlers.Params{
+	l := logic.New(logic.Params{
 		Stores: stores,
+	})
+
+	s := newSever(handlers.NewHandlers(handlers.Params{
+		Logic: l,
 	}), cfg.port)
 
-	fmt.Printf("Listenning server on port %s\n", cfg.port)
+	fmt.Printf("Listening server on port %s\n", cfg.port)
 	if err := s.ListenAndServe(); err != nil {
 		panic(err)
 	}

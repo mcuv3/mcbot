@@ -3,28 +3,31 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/mcuv3/mcbot/internal/storage"
+	"github.com/mcuv3/mcbot/internal/logic"
 )
 
+var _ = Handler(&Handlers{})
+
 type Handler interface {
-	AnalyseStockHandler(w http.ResponseWriter, r *http.Request)
+	AnalyzeStockHandler(w http.ResponseWriter, r *http.Request)
 	AddStockHandler(w http.ResponseWriter, r *http.Request)
 	ListStockHandler(w http.ResponseWriter, r *http.Request)
 	DeleteStockHandler(w http.ResponseWriter, r *http.Request)
 	CurrentStatusHandler(w http.ResponseWriter, r *http.Request)
 	AddStatusHandler(w http.ResponseWriter, r *http.Request)
+	SeedHandler(w http.ResponseWriter, r *http.Request)
 }
 
 type Params struct {
-	Stores storage.Store
+	Logic logic.Layer
 }
 
-type Logic struct {
-	Stores storage.Store
+type Handlers struct {
+	logic logic.Layer
 }
 
-func NewLogic(params Params) Logic {
-	return Logic{
-		Stores: params.Stores,
+func NewHandlers(params Params) Handlers {
+	return Handlers{
+		logic: params.Logic,
 	}
 }

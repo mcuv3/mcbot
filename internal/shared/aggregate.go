@@ -4,7 +4,7 @@ import "context"
 
 type API interface {
 	AddStock(context.Context, AddStockParams) error
-	AnalyseStock(context.Context, AnalyseStockParams) (AnalyseStockResult, error)
+	AnalyzeStock(context.Context, AnalyzeStockParams) (AnalyzeStockResult, error)
 	Buy(context.Context, BuyParams) error
 	Sell(context.Context, SellParams) error
 }
@@ -28,12 +28,12 @@ type SellParams struct {
 	Price    int    `json:"price"`
 }
 
-type AnalyseStockParams struct {
+type AnalyzeStockParams struct {
 	Symbol   string `json:"symbol"`
 	Exchange string `json:"exchange"`
 	Frame    int    `json:"frame"`
 }
 
-type AnalyseStockResult struct {
+type AnalyzeStockResult struct {
 	Symbol string `json:"symbol"`
 }

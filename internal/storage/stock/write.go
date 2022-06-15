@@ -2,6 +2,7 @@ package stock
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/google/uuid"
 	"go.mongodb.org/mongo-driver/bson"
@@ -20,7 +21,16 @@ func NewWriter(client *mongo.Database) Writer {
 
 func (w Writer) Save(trend Stock) error {
 	collection := w.client.Collection(emptyStock.CollectionName())
-	_, err := collection.InsertOne(context.TODO(), trend)
+	res, err := collection.InsertOne(context.Background(), trend)
+	fmt.Println(res)
+	return err
+}
+
+func (w Writer) SaveMany(trend interface{}) error {
+	collection := w.client.Collection(emptyStock.CollectionName())
+
+	_, err := collection.InsertMany(context.Background(), nil)
+
 	return err
 }
 

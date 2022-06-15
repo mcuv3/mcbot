@@ -5,24 +5,23 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/google/uuid"
 	"github.com/gorilla/mux"
+	"github.com/mcuv3/mcbot/internal/shared"
 	"github.com/mcuv3/mcbot/internal/storage/stock"
 )
 
-func (l Logic) AddStockHandler(w http.ResponseWriter, r *http.Request) {
-	req := analyseStockRequest{}
+func (l Handlers) AddStockHandler(w http.ResponseWriter, r *http.Request) {
+	req := analyzeStockRequest{}
 	if err := l.parseRequest(r, &req); err != nil {
 		l.writeError(w, err)
 		return
 	}
 
-	err := l.SaveStock(stock.Stock{
+	err := l.logic.AddStock(r.Context(), shared.AddStockParams{
 		Symbol:   req.Symbol,
-		ID:       uuid.New().String(),
-		Name:     req.Name,
 		Exchange: req.Exchange,
 	})
+
 	if err != nil {
 		l.writeError(w, err)
 		return
@@ -33,8 +32,8 @@ func (l Logic) AddStockHandler(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-func (l Logic) ListStockHandler(w http.ResponseWriter, r *http.Request) {
-	stocks, err := l.ListStocks(context.Background(), stock.ListParams{})
+func (l Handlers) ListStockHandler(w http.ResponseWriter, r *http.Request) {
+	stocks, err := l.logic.ListStocks(context.Background(), stock.ListParams{})
 	if err != nil {
 		l.writeError(w, err)
 		return
@@ -43,7 +42,7 @@ func (l Logic) ListStockHandler(w http.ResponseWriter, r *http.Request) {
 	l.writeSuccessResponse(w, stocks)
 }
 
-func (l Logic) DeleteStockHandler(w http.ResponseWriter, r *http.Request) {
+func (l Handlers) DeleteStockHandler(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	stockId, ok := params["stockId"]
 	if !ok {
@@ -51,9 +50,7 @@ func (l Logic) DeleteStockHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err := l.DeleteStock(context.Background(), stock.DeleteParams{
-		StockID: uuid.MustParse(stockId),
-	})
+	err := l.logic.DeleteStock(r.Context(), stockId)
 	if err != nil {
 		l.writeError(w, err)
 		return

@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/google/uuid v1.3.0
 	github.com/gorilla/mux v1.8.0
-	go.mongodb.org/mongo-driver v1.8.4
+	go.mongodb.org/mongo-driver v1.9.1
 	golang.org/x/exp v0.0.0-20220328175248-053ad81199eb
 	google.golang.org/grpc v1.45.0
 	google.golang.org/protobuf v1.28.0

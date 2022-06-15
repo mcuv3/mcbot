@@ -7,10 +7,10 @@ const (
 )
 
 type Stock struct {
-	ID       string   `bson:"_id"`
-	Symbol   string   `bson:"symbol"`
-	Name     string   `bson:"name"`
-	Exchange Exchange `bson:"exchange"`
+	Symbol     string   `bson:"symbol"`
+	BaseAsset  string   `bson:"baseAsset"`
+	QuoteAsset string   `bson:"quoteAsset"`
+	Exchange   Exchange `bson:"exchange"`
 }
 
 var emptyStock = Stock{}
