@@ -26,11 +26,11 @@ type Params struct {
 }
 
 type Logic struct {
-	stores storage.Store
+	storage.Store
 }
 
 func New(params Params) Logic {
 	return Logic{
-		stores: params.Stores,
+		params.Stores,
 	}
 }

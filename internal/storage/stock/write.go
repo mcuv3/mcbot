@@ -26,10 +26,10 @@ func (w Writer) Save(trend Stock) error {
 	return err
 }
 
-func (w Writer) SaveMany(trend interface{}) error {
+func (w Writer) SaveMany(trend []interface{}) error {
 	collection := w.client.Collection(emptyStock.CollectionName())
 
-	_, err := collection.InsertMany(context.Background(), nil)
+	_, err := collection.InsertMany(context.Background(), trend)
 
 	return err
 }

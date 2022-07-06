@@ -8,6 +8,6 @@ func (h Handlers) SeedHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	h.writeSuccessResponse(w, map[string]string{
-		"success": "simon",
+		"success": "true",
 	})
 }

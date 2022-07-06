@@ -6,5 +6,5 @@ import (
 
 // SaveStockHandler is a function that saves a stock
 func (l Logic) SaveStock(stock stock.Stock) error {
-	return l.stores.Stock.Save(stock)
+	return l.Stock.Save(stock)
 }

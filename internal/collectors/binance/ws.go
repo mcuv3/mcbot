@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/gorilla/websocket"
@@ -45,7 +46,7 @@ func NewSymbolSubscriber[T Payloads](addr string, handler WsHandler[T]) SymbolSu
 
 func (w SymbolSubscriber[T]) Dial(ctx context.Context, params Params) error {
 	interrupt := make(chan os.Signal, 1)
-	signal.Notify(interrupt, os.Interrupt)
+	signal.Notify(interrupt, os.Interrupt, syscall.SIGHUP)
 	u := url.URL{Scheme: "wss", Host: w.addr, Path: "/ws"}
 
 	payload, err := json.Marshal(params)
@@ -93,6 +94,7 @@ func (w SymbolSubscriber[T]) Dial(ctx context.Context, params Params) error {
 	for {
 		select {
 		case <-done:
+			log.Println("Done channel exiting...")
 			return nil
 		case <-interrupt:
 			log.Println("interrupt signal received. Exiting...")

@@ -36,3 +36,21 @@ func (r Reader) Find(ctx context.Context, params ListParams) ([]Stock, error) {
 
 	return trends, nil
 }
+
+type FindOneParams struct {
+	Symbol   string `bson:"symbol"`
+	Exchange string `bson:"exchange"`
+}
+
+func (r Reader) FindOne(ctx context.Context, params FindOneParams) (Stock, error) {
+	collection := r.client.Collection(emptyStock.CollectionName())
+	var trend Stock
+	res := collection.FindOne(ctx, params)
+
+	err := res.Decode(&trend)
+	if err != nil {
+		return trend, err
+	}
+
+	return trend, nil
+}

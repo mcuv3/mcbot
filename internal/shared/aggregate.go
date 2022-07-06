@@ -31,7 +31,6 @@ type SellParams struct {
 type AnalyzeStockParams struct {
 	Symbol   string `json:"symbol"`
 	Exchange string `json:"exchange"`
-	Frame    int    `json:"frame"`
 }
 
 type AnalyzeStockResult struct {

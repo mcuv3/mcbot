@@ -2,6 +2,10 @@ package logic
 
 import (
 	"context"
+	"math/rand"
+
+	"errors"
+	"fmt"
 	"log"
 
 	"github.com/google/uuid"
@@ -24,7 +28,7 @@ func (l Logic) AddStock(ctx context.Context, params shared.AddStockParams) error
 }
 
 func (l Logic) DeleteStock(ctx context.Context, stockID string) error {
-	err := l.stores.Stock.Delete(ctx, stock.DeleteParams{
+	err := l.Stock.Delete(ctx, stock.DeleteParams{
 		StockID: uuid.MustParse(stockID),
 	})
 	if err != nil {
@@ -34,16 +38,24 @@ func (l Logic) DeleteStock(ctx context.Context, stockID string) error {
 }
 
 func (l Logic) ListStocks(ctx context.Context, params stock.ListParams) ([]stock.Stock, error) {
-	return l.stores.Stock.Find(ctx, params)
+	return l.Stock.Find(ctx, params)
 }
 
 func (l Logic) AnalyzeStock(ctx context.Context, params shared.AnalyzeStockParams) (shared.AnalyzeStockResult, error) {
 	sb := binance.NewSymbolSubscriber[binance.KlinePayload]("", handlers.KLineHandler{})
+	_, err := l.Stock.FindOne(ctx, stock.FindOneParams{
+		Symbol:   params.Symbol,
+		Exchange: params.Exchange,
+	})
+	if err != nil {
+		return shared.AnalyzeStockResult{}, errors.New("couldn't find symbol for the given exchange")
+	}
+
 	go func() {
 		if err := sb.Dial(ctx, binance.Params{
-			ID:     1,
+			ID:     rand.Intn(100),
 			Method: binance.SUBSCRIBE,
-			Params: []string{""},
+			Params: []string{fmt.Sprintf("%s@kline_1m", params.Symbol)},
 		}); err != nil {
 			log.Println(err)
 		}

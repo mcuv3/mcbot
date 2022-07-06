@@ -8,7 +8,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mcuv3/mcbot/api/onprem/handlers"
+	"github.com/mcuv3/mcbot/handlers"
 	"github.com/mcuv3/mcbot/internal/logic"
 	"github.com/mcuv3/mcbot/internal/storage"
 )

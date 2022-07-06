@@ -14,7 +14,8 @@ func (l Logic) Seed(ctx context.Context) error {
 	if err != nil {
 		return err
 	}
-	stocks := make([]stock.Stock, 0, len(symbols))
+
+	stocks := make([]interface{}, 0, len(symbols))
 
 	for _, s := range symbols {
 		stocks = append(stocks, stock.Stock{
@@ -24,7 +25,6 @@ func (l Logic) Seed(ctx context.Context) error {
 			Exchange:   "binance",
 		})
 	}
-	l.stores.Stock.SaveMany(stocks)
 
-	return nil
+	return l.Stock.SaveMany(stocks)
 }
