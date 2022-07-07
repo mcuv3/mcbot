@@ -4,6 +4,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/mcuv3/mcbot/internal/storage/kline"
 	"github.com/mcuv3/mcbot/internal/storage/stock"
 	"github.com/mcuv3/mcbot/internal/storage/trend"
 	"go.mongodb.org/mongo-driver/mongo"
@@ -18,6 +19,7 @@ type Params struct {
 type Store struct {
 	Trend trend.Unit
 	Stock stock.Unit
+	Kline kline.Unit
 }
 
 func NewStore(params Params) Store {
@@ -26,6 +28,7 @@ func NewStore(params Params) Store {
 	return Store{
 		Trend: trend.NewUnit(db),
 		Stock: stock.NewUnit(db),
+		Kline: kline.NewUnit(db),
 	}
 }
 

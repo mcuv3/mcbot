@@ -1,7 +1,6 @@
 package collectors
 
 import (
-	"github.com/mcuv3/mcbot/internal/collectors/coinapi"
 	"github.com/mcuv3/mcbot/internal/collectors/cryptocomp"
 	"github.com/mcuv3/mcbot/internal/shared"
 )
@@ -14,7 +13,6 @@ func NewCryptoStore() shared.Collector {
 	return CryptoStore{
 		collectors: map[string]shared.Collector{
 			"cryptocomp": cryptocomp.NewCryptoComp(""),
-			"coinapi":    coinapi.NewCoinAPI(),
 		},
 	}
 }

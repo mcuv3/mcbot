@@ -16,7 +16,7 @@ import (
 )
 
 func (l Logic) AddStock(ctx context.Context, params shared.AddStockParams) error {
-	err := l.SaveStock(stock.Stock{
+	err := l.Stock.Save(stock.Stock{
 		Symbol:    params.Symbol,
 		BaseAsset: params.Symbol,
 		Exchange:  params.Exchange,
@@ -42,7 +42,9 @@ func (l Logic) ListStocks(ctx context.Context, params stock.ListParams) ([]stock
 }
 
 func (l Logic) AnalyzeStock(ctx context.Context, params shared.AnalyzeStockParams) (shared.AnalyzeStockResult, error) {
-	sb := binance.NewSymbolSubscriber[binance.KlinePayload]("", handlers.KLineHandler{})
+	sb := binance.NewSymbolSubscriber[binance.KlinePayload]("", handlers.KLineHandler{
+		Store: l.Store,
+	})
 	_, err := l.Stock.FindOne(ctx, stock.FindOneParams{
 		Symbol:   params.Symbol,
 		Exchange: params.Exchange,
