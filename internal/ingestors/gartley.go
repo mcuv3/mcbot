@@ -2,6 +2,7 @@ package ingestors
 
 import (
 	"context"
+	"math"
 	"time"
 
 	"github.com/mcuv3/mcbot/internal/storage"
@@ -14,7 +15,7 @@ type Gartley struct {
 }
 
 type Provider interface {
-	GetKline(s string) kline.Model
+	NextKline(ctx context.Context, s string) (kline.Model, error)
 }
 
 type ingest struct {
@@ -24,11 +25,14 @@ type ingest struct {
 	buffKline []kline.Model
 }
 
-func (i *ingest) Start() {
+func (i *ingest) Start(ctx context.Context) {
 	go func() {
 
 		for {
-			kline := i.GetKline(i.symbol)
+			kline, err := i.NextKline(ctx, i.symbol)
+			if err != nil {
+				continue
+			}
 			i.buffKline = append(i.buffKline, kline)
 
 			if len(i.buffKline) < 30 {
@@ -41,16 +45,49 @@ func (i *ingest) Start() {
 	}()
 }
 
+func findInfexionPoints(elments []kline.Model) []float64 {
+	points := []float64{}
+	points = append(points, elments[0].HighPrice)
+	up := elments[0].HighPrice > elments[1].HighPrice
+
+	preferedPer := 2
+
+	add := func(v float64, replace bool) {
+		if replace {
+			points[len(points)-1] = v
+		} else {
+			last := points[len(points)-1]
+			diff := math.Abs(last - v)
+			if diff >= float64(preferedPer) {
+				// should change
+				up = !up
+				points = append(points, v)
+			}
+		}
+	}
+
+	for _, e := range elments {
+		if e.HighPrice > points[len(points)-1] {
+			add(e.HighPrice, up)
+		} else {
+			add(e.HighPrice, !up)
+		}
+	}
+	return points
+
+}
+
 func (g *Gartley) IngestSymbol(ctx context.Context, s string) {
 	ingest := ingest{
+		Provider:  g,
 		symbol:    s,
 		process:   make(chan string),
 		buffKline: []kline.Model{},
 	}
-	ingest.Start()
+	ingest.Start(ctx)
 	g.process = append(g.process, ingest)
 }
 
-func (g *Gartley) GetKline(ctx context.Context, s string) (kline.Model, error) {
+func (g *Gartley) NextKline(ctx context.Context, s string) (kline.Model, error) {
 	return kline.Model{}, nil
 }
