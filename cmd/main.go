@@ -9,6 +9,7 @@ import (
 	"net/http"
 
 	"github.com/mcuv3/mcbot/handlers"
+	"github.com/mcuv3/mcbot/internal/ingestors"
 	"github.com/mcuv3/mcbot/internal/logic"
 	"github.com/mcuv3/mcbot/internal/storage"
 )
@@ -51,6 +52,9 @@ func main() {
 
 	l := logic.New(logic.Params{
 		Stores: stores,
+		Gartley: &ingestors.Gartley{
+			Store: stores,
+		},
 	})
 
 	s := newSever(handlers.NewHandlers(handlers.Params{

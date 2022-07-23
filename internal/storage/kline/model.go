@@ -10,6 +10,7 @@ type Model struct {
 	ClosePrice string  `bson:"close_price"`
 	HighPrice  float64 `bson:"high_price"`
 	LowPrice   string  `bson:"low_price"`
+	CreatedAt  int64   `bson:"created_at"`
 }
 
 var emptyTrend = Model{}

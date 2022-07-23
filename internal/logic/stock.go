@@ -54,12 +54,14 @@ func (l Logic) AnalyzeStock(ctx context.Context, params shared.AnalyzeStockParam
 	}
 
 	go func() {
+		l.Gartley.IngestSymbol(ctx, params.Symbol)
 		if err := sb.Dial(ctx, binance.Params{
 			ID:     rand.Intn(100),
 			Method: binance.SUBSCRIBE,
 			Params: []string{fmt.Sprintf("%s@kline_1m", params.Symbol)},
 		}); err != nil {
 			log.Println(err)
+			return
 		}
 	}()
 

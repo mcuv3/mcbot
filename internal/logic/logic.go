@@ -4,6 +4,7 @@ package logic
 import (
 	"context"
 
+	"github.com/mcuv3/mcbot/internal/ingestors"
 	"github.com/mcuv3/mcbot/internal/shared"
 	"github.com/mcuv3/mcbot/internal/storage"
 	"github.com/mcuv3/mcbot/internal/storage/stock"
@@ -22,15 +23,18 @@ type Layer interface {
 }
 
 type Params struct {
-	Stores storage.Store
+	Stores  storage.Store
+	Gartley *ingestors.Gartley
 }
 
 type Logic struct {
 	storage.Store
+	Gartley *ingestors.Gartley
 }
 
 func New(params Params) Logic {
 	return Logic{
 		params.Stores,
+		params.Gartley,
 	}
 }

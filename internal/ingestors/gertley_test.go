@@ -1,7 +1,6 @@
 package ingestors
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/mcuv3/mcbot/internal/storage/kline"
@@ -41,7 +40,7 @@ func TestSelectInfexionPoints(t *testing.T) {
 			HighPrice: 8,
 		},
 		{
-			HighPrice: 9,
+			HighPrice: 10,
 		},
 		{
 			HighPrice: 3,
@@ -88,13 +87,13 @@ func TestSelectInfexionPoints(t *testing.T) {
 	}
 
 	t.Run("up trend", func(t *testing.T) {
-		elements := findInfexionPoints(upTrend)
-		fmt.Println(elements)
-		assert.Exactly(t, []float64{1, 6, 1, 9, 3}, elements)
+		elements, err := findMaxAndMinPoints(upTrend, 25)
+		assert.NoError(t, err)
+		assert.Exactly(t, []float64{1, 6, 1, 10, 3}, elements)
 	})
 	t.Run("down trend", func(t *testing.T) {
-		elements := findInfexionPoints(downTrend)
-		fmt.Println(elements)
+		elements, err := findMaxAndMinPoints(downTrend, 25)
+		assert.NoError(t, err)
 		assert.Exactly(t, []float64{10, 2, 10, 1, 10}, elements)
 	})
 

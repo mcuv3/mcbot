@@ -3,13 +3,13 @@ package kline
 import "go.mongodb.org/mongo-driver/mongo"
 
 type Unit struct {
-	Reader
-	Writer
+	reader
+	writer
 }
 
 func NewUnit(client *mongo.Database) Unit {
 	return Unit{
-		Reader: NewReader(client),
-		Writer: NewWriter(client),
+		reader: NewReader(client),
+		writer: NewWriter(client),
 	}
 }

@@ -4,19 +4,20 @@ import (
 	"context"
 
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-type Reader struct {
+type reader struct {
 	client *mongo.Database
 }
 
-func NewReader(client *mongo.Database) Reader {
-	return Reader{
+func NewReader(client *mongo.Database) reader {
+	return reader{
 		client: client,
 	}
 }
 
-func (r Reader) List(ctx context.Context, filters map[string]interface{}) ([]Model, error) {
+func (r reader) List(ctx context.Context, filters map[string]interface{}) ([]Model, error) {
 	collection := r.client.Collection(emptyTrend.Table())
 	var trends []Model
 	cur, err := collection.Find(ctx, filters)
@@ -33,4 +34,21 @@ func (r Reader) List(ctx context.Context, filters map[string]interface{}) ([]Mod
 	}
 
 	return trends, nil
+}
+
+func (r reader) GetLast(ctx context.Context, symbol string) (Model, error) {
+	collection := r.client.Collection(emptyTrend.Table())
+	var trend Model
+
+	res := collection.FindOne(ctx, map[string]interface{}{
+		"symbol": symbol,
+	}, options.FindOne().SetSort(map[string]int{"createdAt": -1}))
+	if res.Err() != nil {
+		return trend, res.Err()
+	}
+	if err := res.Decode(&trend); err != nil {
+		return trend, err
+	}
+
+	return trend, nil
 }
