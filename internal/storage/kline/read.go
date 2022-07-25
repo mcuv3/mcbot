@@ -3,8 +3,8 @@ package kline
 import (
 	"context"
 
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type reader struct {
@@ -18,7 +18,7 @@ func NewReader(client *mongo.Database) reader {
 }
 
 func (r reader) List(ctx context.Context, filters map[string]interface{}) ([]Model, error) {
-	collection := r.client.Collection(emptyTrend.Table())
+	collection := r.client.Collection(collectionName)
 	var trends []Model
 	cur, err := collection.Find(ctx, filters)
 	if err != nil {
@@ -37,12 +37,10 @@ func (r reader) List(ctx context.Context, filters map[string]interface{}) ([]Mod
 }
 
 func (r reader) GetLast(ctx context.Context, symbol string) (Model, error) {
-	collection := r.client.Collection(emptyTrend.Table())
+	collection := r.client.Collection(collectionName)
 	var trend Model
 
-	res := collection.FindOne(ctx, map[string]interface{}{
-		"symbol": symbol,
-	}, options.FindOne().SetSort(map[string]int{"createdAt": -1}))
+	res := collection.FindOne(ctx, bson.D{{Key: "symbol", Value: symbol}})
 	if res.Err() != nil {
 		return trend, res.Err()
 	}

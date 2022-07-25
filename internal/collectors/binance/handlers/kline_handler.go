@@ -3,6 +3,7 @@ package handlers
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/mcuv3/mcbot/internal/collectors/binance"
 	"github.com/mcuv3/mcbot/internal/storage"
@@ -17,7 +18,7 @@ func (k KLineHandler) OnMessage(ctx context.Context, msg binance.KlinePayload) e
 	fmt.Println("Message : ", msg)
 	if msg.K.IsClosed {
 		return k.Kline.Save(kline.Model{
-			Symbol:     msg.Symbol,
+			Symbol:     strings.ToLower(msg.Symbol),
 			StartTime:  msg.K.StartTime,
 			CloseTime:  msg.K.CloseTime,
 			OpenPrice:  msg.K.OpenPrice,

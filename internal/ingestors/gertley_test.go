@@ -10,79 +10,79 @@ import (
 func TestSelectInfexionPoints(t *testing.T) {
 	var upTrend = []kline.Model{
 		{
-			HighPrice: 1,
+			HighPrice: "1",
 		},
 		{
-			HighPrice: 2,
+			HighPrice: "2",
 		},
 		{
-			HighPrice: 3,
+			HighPrice: "3",
 		},
 		{
-			HighPrice: 4,
+			HighPrice: "4",
 		},
 		{
-			HighPrice: 5,
+			HighPrice: "5",
 		},
 		{
-			HighPrice: 6,
+			HighPrice: "6",
 		},
 		{
-			HighPrice: 4,
+			HighPrice: "4",
 		},
 		{
-			HighPrice: 1,
+			HighPrice: "1",
 		},
 		{
-			HighPrice: 5,
+			HighPrice: "5",
 		},
 		{
-			HighPrice: 8,
+			HighPrice: "8",
 		},
 		{
-			HighPrice: 10,
+			HighPrice: "10",
 		},
 		{
-			HighPrice: 3,
+			HighPrice: "3",
 		},
 	}
 
 	var downTrend = []kline.Model{
 		{
-			HighPrice: 10,
+			HighPrice: "10",
 		},
 		{
-			HighPrice: 7,
+			HighPrice: "7",
 		},
 		{
-			HighPrice: 2,
+			HighPrice: "2",
 		},
 		{
-			HighPrice: 8,
+			HighPrice: "8",
 		},
 		{
-			HighPrice: 10,
+			HighPrice: "10",
 		},
 		{
-			HighPrice: 6,
+			HighPrice: "6",
 		},
 		{
-			HighPrice: 2,
+			HighPrice: "2",
 		},
 		{
-			HighPrice: 1,
+			HighPrice: "1",
 		},
 		{
-			HighPrice: 5,
+			HighPrice: "5",
 		},
 		{
-			HighPrice: 8,
+			HighPrice: "8",
 		},
 		{
-			HighPrice: 9,
+			HighPrice: "9",
 		},
 		{
-			HighPrice: 10,
+			HighPrice: "10",
 		},
 	}
 

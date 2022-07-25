@@ -38,6 +38,8 @@ func (l Logic) DeleteStock(ctx context.Context, stockID string) error {
 }
 
 func (l Logic) ListStocks(ctx context.Context, params stock.ListParams) ([]stock.Stock, error) {
+	k, err := l.Kline.GetLast(ctx, "btcbusd")
+	fmt.Println(k, err)
 	return l.Stock.Find(ctx, params)
 }
 

@@ -12,15 +12,20 @@ import (
 	"github.com/mcuv3/mcbot/internal/storage/kline"
 )
 
+var store storage.Store
+
 type Gartley struct {
-	storage.Store
+	store   storage.Store
 	process []ingest
 }
 
 func NewGartley(stores storage.Store) *Gartley {
+	store = stores
+	fmt.Println(store.Kline.GetLast(context.Background(), "btcbusd"))
+
 	return &Gartley{
 		process: []ingest{},
-		Store:   stores,
+		store:   stores,
 	}
 }
 
@@ -38,8 +43,11 @@ type ingest struct {
 func (i *ingest) Start(ctx context.Context) {
 	for {
 		fmt.Printf("Waiting for kline ...  symbol:%s \n", i.symbol)
+		fmt.Printf("Current received klines: %d \n", len(i.buffKline))
+		time.Sleep(time.Second * 5)
 		kline, err := i.nextKline(ctx, i.symbol)
 		if err != nil {
+			log.Println(err)
 			continue
 		}
 		if len(i.buffKline) == 0 {
@@ -53,7 +61,7 @@ func (i *ingest) Start(ctx context.Context) {
 
 		i.buffKline = append(i.buffKline, kline)
 
-		if len(i.buffKline) < 30 {
+		if len(i.buffKline) < 5 {
 			continue // not required the minimun amount of kline to start ingesting.
 		}
 		points, err := findMaxAndMinPoints(i.buffKline, 25)
@@ -61,9 +69,10 @@ func (i *ingest) Start(ctx context.Context) {
 			log.Println("Error finding max and min points:", err)
 			continue
 		}
+		fmt.Println("Buffer: ", i.buffKline)
 		fmt.Println("Points: ", points)
 
-		time.Sleep(time.Minute) // wait unitil the new kline gets stored.
+		// wait unitil the new kline gets stored.
 	}
 	// calculate fibo and start
 }
@@ -76,7 +85,7 @@ func findMaxAndMinPoints(elements []kline.Model, perChange float64) ([]float64, 
 		return nil, errors.New("perChange must be between 0 and 100")
 	}
 	points := []float64{}
-	points = append(points, elements[0].HighPrice)
+	points = append(points, elements[0].GetHighPrice())
 	up := elements[0].HighPrice > elements[1].HighPrice
 
 	add := func(v float64, replace bool) {
@@ -94,10 +103,10 @@ func findMaxAndMinPoints(elements []kline.Model, perChange float64) ([]float64, 
 	}
 
 	for _, e := range elements {
-		if e.HighPrice > points[len(points)-1] {
-			add(e.HighPrice, up)
+		if e.GetHighPrice() > points[len(points)-1] {
+			add(e.GetHighPrice(), up)
 		} else {
-			add(e.HighPrice, !up)
+			add(e.GetHighPrice(), !up)
 		}
 	}
 	return points, nil
@@ -111,12 +120,14 @@ func (g *Gartley) IngestSymbol(ctx context.Context, s string) {
 		process:   make(chan string),
 		buffKline: []kline.Model{},
 	}
-	go ingest.Start(ctx)
 	g.process = append(g.process, ingest)
+	go ingest.Start(ctx)
 }
 
 func (g *Gartley) nextKline(ctx context.Context, s string) (kline.Model, error) {
-	k, err := g.Kline.GetLast(ctx, s)
+	log.Println("Getting next kline for:", s)
+	ctx = context.Background()
+	k, err := store.Kline.GetLast(ctx, s)
 	if err != nil {
 		return kline.Model{}, err
 	}

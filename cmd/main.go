@@ -51,10 +51,8 @@ func main() {
 	})
 
 	l := logic.New(logic.Params{
-		Stores: stores,
-		Gartley: &ingestors.Gartley{
-			Store: stores,
-		},
+		Stores:  stores,
+		Gartley: ingestors.NewGartley(stores),
 	})
 
 	s := newSever(handlers.NewHandlers(handlers.Params{

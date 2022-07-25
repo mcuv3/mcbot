@@ -37,10 +37,14 @@ func ConnectDB(str string) (*mongo.Client, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	err = client.Connect(ctx)
 	if err != nil {
+		return nil, err
+	}
+	if err := client.Ping(ctx, nil); err != nil {
 		return nil, err
 	}
 
