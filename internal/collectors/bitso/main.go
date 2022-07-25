@@ -32,7 +32,7 @@ type response struct {
 }
 
 func getSignature() string {
-	secret := "6abf1cdea74981b816fa4b165daf1e40"
+	secret := ""
 	data := "1655266896GET/v3/balance/"
 
 	// Create a new HMAC by defining the hash type and the key (as byte array)
