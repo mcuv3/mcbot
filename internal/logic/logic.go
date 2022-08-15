@@ -4,6 +4,7 @@ package logic
 import (
 	"context"
 
+	"github.com/go-echarts/go-echarts/v2/charts"
 	"github.com/mcuv3/mcbot/internal/ingestors"
 	"github.com/mcuv3/mcbot/internal/shared"
 	"github.com/mcuv3/mcbot/internal/storage"
@@ -17,6 +18,7 @@ type Layer interface {
 	DeleteStock(ctx context.Context, stockID string) error
 	ListStocks(ctx context.Context, params stock.ListParams) ([]stock.Stock, error)
 	AnalyzeStock(ctx context.Context, params shared.AnalyzeStockParams) (shared.AnalyzeStockResult, error)
+	GraphAnalysis(ctx context.Context, params shared.GraphAnalysisParams) (*charts.Kline, error)
 	Seed(ctx context.Context) error
 	Buy(ctx context.Context, params shared.BuyParams) error
 	Sell(ctx context.Context, params shared.SellParams) error

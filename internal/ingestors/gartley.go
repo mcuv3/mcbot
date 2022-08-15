@@ -43,7 +43,6 @@ type ingest struct {
 func (i *ingest) Start(ctx context.Context) {
 	for {
 		fmt.Printf("Waiting for kline ...  symbol:%s \n", i.symbol)
-		fmt.Printf("Current received klines: %d \n", len(i.buffKline))
 		time.Sleep(time.Second * 5)
 		kline, err := i.nextKline(ctx, i.symbol)
 		if err != nil {
@@ -64,20 +63,18 @@ func (i *ingest) Start(ctx context.Context) {
 		if len(i.buffKline) < 5 {
 			continue // not required the minimun amount of kline to start ingesting.
 		}
-		points, err := findMaxAndMinPoints(i.buffKline, 25)
+		points, err := FindMaxAndMinPoints(i.buffKline, 0.06)
 		if err != nil {
 			log.Println("Error finding max and min points:", err)
 			continue
 		}
-		fmt.Println("Buffer: ", i.buffKline)
-		fmt.Println("Points: ", points)
+		log.Println("Points: ", points)
 
 		// wait unitil the new kline gets stored.
 	}
-	// calculate fibo and start
 }
 
-func findMaxAndMinPoints(elements []kline.Model, perChange float64) ([]float64, error) {
+func FindMaxAndMinPoints(elements []kline.Model, perChange float64) ([]float64, error) {
 	if len(elements) < 2 {
 		return nil, errors.New("not enough elements to find max and min")
 	}
@@ -102,11 +99,11 @@ func findMaxAndMinPoints(elements []kline.Model, perChange float64) ([]float64, 
 		}
 	}
 
-	for _, e := range elements {
+	for _, e := range elements[1:] {
 		if e.GetHighPrice() > points[len(points)-1] {
-			add(e.GetHighPrice(), up)
+			add(e.GetOpenPrice(), up)
 		} else {
-			add(e.GetHighPrice(), !up)
+			add(e.GetOpenPrice(), !up)
 		}
 	}
 	return points, nil
@@ -125,7 +122,6 @@ func (g *Gartley) IngestSymbol(ctx context.Context, s string) {
 }
 
 func (g *Gartley) nextKline(ctx context.Context, s string) (kline.Model, error) {
-	log.Println("Getting next kline for:", s)
 	ctx = context.Background()
 	k, err := store.Kline.GetLast(ctx, s)
 	if err != nil {

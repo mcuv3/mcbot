@@ -14,3 +14,8 @@ Workflow analyse
 - Track stock changes compare current trends with previous then calculate the diff and finish 
 
 -- JOBS entity to keep track and reset or resume the analysis for the above use case.
+
+
+------------
+
+1. Watch videos of gartley pattern trace, a lot of examples to understand the pattern.

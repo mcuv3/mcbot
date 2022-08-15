@@ -87,12 +87,12 @@ func TestSelectInfexionPoints(t *testing.T) {
 	}
 
 	t.Run("up trend", func(t *testing.T) {
-		elements, err := findMaxAndMinPoints(upTrend, 25)
+		elements, err := FindMaxAndMinPoints(upTrend, 25)
 		assert.NoError(t, err)
 		assert.Exactly(t, []float64{1, 6, 1, 10, 3}, elements)
 	})
 	t.Run("down trend", func(t *testing.T) {
-		elements, err := findMaxAndMinPoints(downTrend, 25)
+		elements, err := FindMaxAndMinPoints(downTrend, 25)
 		assert.NoError(t, err)
 		assert.Exactly(t, []float64{10, 2, 10, 1, 10}, elements)
 	})

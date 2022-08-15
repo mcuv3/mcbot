@@ -13,9 +13,8 @@ func routes(handlers handlers.Handler) http.Handler {
 	root.HandleFunc("/stock", handlers.AddStockHandler).Methods("POST")
 	root.HandleFunc("/stock", handlers.ListStockHandler).Methods("GET")
 	root.HandleFunc("/stock/{stockId}", handlers.DeleteStockHandler).Methods("DELETE")
-	root.HandleFunc("/stock/analyze", handlers.AnalyzeStockHandler).Methods("POST")
-	root.HandleFunc("/trades", handlers.AddStatusHandler).Methods("GET")
-	root.HandleFunc("/trades/current", handlers.CurrentStatusHandler).Methods("GET")
+	root.HandleFunc("/analyze/state/{analyzerId}", handlers.AnalyzeStateHandler).Methods("GET")
+	root.HandleFunc("/analyze", handlers.AnalyzeStockHandler).Methods("POST")
 	root.HandleFunc("/seed", handlers.SeedHandler).Methods("GET")
 
 	return root

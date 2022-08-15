@@ -1,6 +1,8 @@
 package shared
 
-import "context"
+import (
+	"context"
+)
 
 type API interface {
 	AddStock(context.Context, AddStockParams) error
@@ -35,4 +37,10 @@ type AnalyzeStockParams struct {
 
 type AnalyzeStockResult struct {
 	Symbol string `json:"symbol"`
+}
+
+type GraphAnalysisParams struct {
+	AnalyzerID string `json:"analyzer_id"`
+	Symbol     string `json:"symbol"`
+	Exchange   string `json:"exchange"`
 }

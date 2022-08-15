@@ -28,6 +28,27 @@ func (t Model) GetHighPrice() float64 {
 	return toFloat(t.HighPrice)
 }
 
+func (t Model) GetLowPrice() float64 {
+	return toFloat(t.LowPrice)
+}
+
+func (t Model) GetOpenPrice() float64 {
+	return toFloat(t.OpenPrice)
+}
+
+func (t Model) GetClosePrice() float64 {
+	return toFloat(t.ClosePrice)
+}
+
+func (t Model) GetDetails() [4]float64 {
+	return [4]float64{
+		t.GetOpenPrice(),
+		t.GetClosePrice(),
+		t.GetLowPrice(),
+		t.GetHighPrice(),
+	}
+}
+
 func toFloat(s string) float64 {
 	f, err := strconv.ParseFloat(s, 64)
 	if err != nil {

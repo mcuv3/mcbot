@@ -13,9 +13,8 @@ type Handler interface {
 	AddStockHandler(w http.ResponseWriter, r *http.Request)
 	ListStockHandler(w http.ResponseWriter, r *http.Request)
 	DeleteStockHandler(w http.ResponseWriter, r *http.Request)
-	CurrentStatusHandler(w http.ResponseWriter, r *http.Request)
-	AddStatusHandler(w http.ResponseWriter, r *http.Request)
 	SeedHandler(w http.ResponseWriter, r *http.Request)
+	AnalyzeStateHandler(w http.ResponseWriter, r *http.Request)
 }
 
 type Params struct {
