@@ -23,38 +23,38 @@ func UnixToDate(ux string) time.Time {
 //0.236, 0.382, 0.500, 0.618, 0.764, 1.00, 1.382, 1.618
 
 type RetracementLevels struct {
-	Level1 float64
-	Level2 float64
-	Level3 float64
-	Level4 float64
-	Level5 float64
-	Level6 float64
-	Level7 float64
-	Level8 float64
+	L236  float64
+	L382  float64
+	L500  float64
+	L618  float64
+	L786  float64
+	L100  float64
+	L1382 float64
+	L1618 float64
 }
 
 func GetUpTrendFibonacci(h, l float64) RetracementLevels {
 	return RetracementLevels{
-		Level1: h - (h-l)*0.236,
-		Level2: h - (h-l)*0.382,
-		Level3: h - (h-l)*0.500,
-		Level4: h - (h-l)*0.618,
-		Level5: h - (h-l)*0.764,
-		Level6: h - (h-l)*1.00,
-		Level7: h - (h-l)*1.382,
-		Level8: h - (h-l)*1.618,
+		L236:  h - (h-l)*0.236,
+		L382:  h - (h-l)*0.382,
+		L500:  h - (h-l)*0.500,
+		L618:  h - (h-l)*0.618,
+		L786:  h - (h-l)*0.786,
+		L100:  h - (h-l)*1.00,
+		L1382: h - (h-l)*1.382,
+		L1618: h - (h-l)*1.618,
 	}
 }
 
 func GetDownTrendFibonacci(h, l float64) RetracementLevels {
 	return RetracementLevels{
-		Level1: l + (h-l)*0.236,
-		Level2: l + (h-l)*0.382,
-		Level3: l + (h-l)*0.500,
-		Level4: l + (h-l)*0.618,
-		Level5: l + (h-l)*0.764,
-		Level6: l + (h-l)*1.00,
-		Level7: l + (h-l)*1.382,
-		Level8: l + (h-l)*1.618,
+		L236:  l + (h-l)*0.236,
+		L382:  l + (h-l)*0.382,
+		L500:  l + (h-l)*0.500,
+		L618:  l + (h-l)*0.618,
+		L786:  l + (h-l)*0.786,
+		L100:  l + (h-l)*1.00,
+		L1382: l + (h-l)*1.382,
+		L1618: l + (h-l)*1.618,
 	}
 }

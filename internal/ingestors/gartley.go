@@ -63,17 +63,35 @@ func (i *ingest) Start(ctx context.Context) {
 		if len(i.buffKline) < 5 {
 			continue // not required the minimun amount of kline to start ingesting.
 		}
-		points, err := FindMaxAndMinPoints(i.buffKline, 0.06)
-		if err != nil {
-			log.Println("Error finding max and min points:", err)
-			continue
-		}
-		log.Println("Points: ", points)
+		max, min := FindMaxAndMinPoint(i.buffKline)
+
+		log.Println("Points: ", max, min)
 
 		// wait unitil the new kline gets stored.
+
+		// a) Define max and min points knowledge
+		// b) Trace x - a fibonacci retrace Grace range [618 - 786] = b
+		// c) Trace a - b fibonacci retrace Grace range [618 or above but not greater than a] = c
+		// d) Trace b - a (opposite dir)
+		// min 786 trace x-a if is below we take it and VALIDATE
+		//RANGE x > 1 270  &&  x < 1 618
+		//
 	}
 }
 
+func FindMaxAndMinPoint(elements []kline.Model) (max float64, min float64) {
+	for _, k := range elements {
+		if k.GetHighPrice() > max {
+			max = k.GetOpenPrice()
+		}
+		if min == 0 || k.GetClosePrice() < min {
+			min = k.GetLowPrice()
+		}
+	}
+	return
+}
+
+// DEPRECATED: our current implementation doesn't need this :(
 func FindMaxAndMinPoints(elements []kline.Model, perChange float64) ([]float64, error) {
 	if len(elements) < 2 {
 		return nil, errors.New("not enough elements to find max and min")
