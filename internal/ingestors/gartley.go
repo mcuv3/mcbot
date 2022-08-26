@@ -8,6 +8,7 @@ import (
 	"math"
 	"time"
 
+	"github.com/mcuv3/mcbot/internal/shared"
 	"github.com/mcuv3/mcbot/internal/storage"
 	"github.com/mcuv3/mcbot/internal/storage/kline"
 )
@@ -40,6 +41,14 @@ type ingest struct {
 	buffKline []kline.Model
 }
 
+type Armonic struct {
+	X Point
+	A Point
+	B Point
+	C Point
+	D Point
+}
+
 func (i *ingest) Start(ctx context.Context) {
 	for {
 		fmt.Printf("Waiting for kline ...  symbol:%s \n", i.symbol)
@@ -63,13 +72,42 @@ func (i *ingest) Start(ctx context.Context) {
 		if len(i.buffKline) < 5 {
 			continue // not required the minimun amount of kline to start ingesting.
 		}
+
 		max, min := FindMaxAndMinPoint(i.buffKline)
+		pattern := Armonic{
+			X: min,
+			A: max,
+		}
 
 		log.Println("Points: ", max, min)
 
+		rts := shared.GetFibonacciRetrace(min.Value, max.Value)
+
+		var B float64
+		var inTheBox bool
+		var idxStartForC int
+
+		for i, k := range i.buffKline[max.Index:] {
+			if k.GetClosePrice() >= rts.L1618 && k.GetClosePrice() <= rts.L786 {
+				if B == 0 || k.GetClosePrice() < B {
+					if B != 0 {
+						inTheBox = true
+					}
+					pattern.B = Point{
+						Value: k.GetClosePrice(),
+						Index: i + max.Index,
+					}
+				}
+			} else if inTheBox { // we enter into the box but exited after
+				idxStartForC = i
+				break
+			}
+		}
+		_ = idxStartForC
+
 		// wait unitil the new kline gets stored.
 
-		// a) Define max and min points knowledge
+		// a) Define max and min points knowledge X
 		// b) Trace x - a fibonacci retrace Grace range [618 - 786] = b
 		// c) Trace a - b fibonacci retrace Grace range [618 or above but not greater than a] = c
 		// d) Trace b - a (opposite dir)
@@ -79,13 +117,26 @@ func (i *ingest) Start(ctx context.Context) {
 	}
 }
 
-func FindMaxAndMinPoint(elements []kline.Model) (max float64, min float64) {
-	for _, k := range elements {
-		if k.GetHighPrice() > max {
-			max = k.GetOpenPrice()
+type Point struct {
+	Value float64
+	Index int
+}
+
+func FindMaxAndMinPoint(elements []kline.Model) (max Point, min Point) {
+	for i, k := range elements {
+		if k.GetHighPrice() > max.Value {
+
+			max = Point{
+				Value: k.GetOpenPrice(),
+				Index: i,
+			}
 		}
-		if min == 0 || k.GetClosePrice() < min {
-			min = k.GetLowPrice()
+		if min.Value == 0 || k.GetClosePrice() < min.Value {
+
+			min = Point{
+				Value: k.GetClosePrice(),
+				Index: i,
+			}
 		}
 	}
 	return

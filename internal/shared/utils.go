@@ -33,28 +33,25 @@ type RetracementLevels struct {
 	L1618 float64
 }
 
-func GetUpTrendFibonacci(h, l float64) RetracementLevels {
-	return RetracementLevels{
-		L236:  h - (h-l)*0.236,
-		L382:  h - (h-l)*0.382,
-		L500:  h - (h-l)*0.500,
-		L618:  h - (h-l)*0.618,
-		L786:  h - (h-l)*0.786,
-		L100:  h - (h-l)*1.00,
-		L1382: h - (h-l)*1.382,
-		L1618: h - (h-l)*1.618,
-	}
-}
+// up - add to low
+// down - reduce it from high
 
-func GetDownTrendFibonacci(h, l float64) RetracementLevels {
+func GetFibonacciRetrace(a, b float64) RetracementLevels {
+	base := b
+	var flip float64 = -1
+	if a > b { // down trend
+		base = b
+		flip = 1
+	}
+
 	return RetracementLevels{
-		L236:  l + (h-l)*0.236,
-		L382:  l + (h-l)*0.382,
-		L500:  l + (h-l)*0.500,
-		L618:  l + (h-l)*0.618,
-		L786:  l + (h-l)*0.786,
-		L100:  l + (h-l)*1.00,
-		L1382: l + (h-l)*1.382,
-		L1618: l + (h-l)*1.618,
+		L236:  base + flip*math.Abs((a-b)*0.236),
+		L382:  base + flip*math.Abs((a-b)*0.382),
+		L500:  base + flip*math.Abs((a-b)*0.500),
+		L618:  base + flip*math.Abs((a-b)*0.618),
+		L786:  base + flip*math.Abs((a-b)*0.786),
+		L100:  base + flip*math.Abs((a-b)*1.00),
+		L1382: base + flip*math.Abs((a-b)*1.382),
+		L1618: base + flip*math.Abs((a-b)*1.618),
 	}
 }
