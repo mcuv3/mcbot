@@ -80,7 +80,7 @@ func (i *ingest) Start(ctx context.Context) {
 		}
 
 		log.Println("Points: ", max, min)
-
+		// case min before max
 		rts := shared.GetFibonacciRetrace(min.Value, max.Value)
 
 		var B float64
@@ -99,18 +99,41 @@ func (i *ingest) Start(ctx context.Context) {
 					}
 				}
 			} else if inTheBox { // we enter into the box but exited after
+				if k.GetClosePrice() < rts.L1618 {
+					// INVALID PATTERN
+				}
 				idxStartForC = i
 				break
 			}
 		}
-		_ = idxStartForC
+
+		rts = shared.GetFibonacciRetrace(pattern.A.Value, pattern.B.Value)
+		var C float64
+		for i, k := range i.buffKline[idxStartForC:] {
+			if k.GetOpenPrice() >= rts.L1618 && k.GetOpenPrice() < pattern.A.Value {
+				if C == 0 || k.GetOpenPrice() > C {
+					if C != 0 {
+						inTheBox = true
+					}
+					pattern.C = Point{
+						Value: k.GetOpenPrice(),
+						Index: i + max.Index,
+					}
+				}
+			} else if inTheBox { // we enter into the box but exited after
+				if k.GetOpenPrice() >= pattern.A.Value {
+					// invalid pattern
+				}
+				break
+			}
+		}
 
 		// wait unitil the new kline gets stored.
 
 		// a) Define max and min points knowledge X
 		// b) Trace x - a fibonacci retrace Grace range [618 - 786] = b
 		// c) Trace a - b fibonacci retrace Grace range [618 or above but not greater than a] = c
-		// d) Trace b - a (opposite dir)
+		// d)
 		// min 786 trace x-a if is below we take it and VALIDATE
 		//RANGE x > 1 270  &&  x < 1 618
 		//
@@ -125,7 +148,6 @@ type Point struct {
 func FindMaxAndMinPoint(elements []kline.Model) (max Point, min Point) {
 	for i, k := range elements {
 		if k.GetHighPrice() > max.Value {
-
 			max = Point{
 				Value: k.GetOpenPrice(),
 				Index: i,
